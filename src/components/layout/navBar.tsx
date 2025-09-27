@@ -1,74 +1,75 @@
 import { useState } from 'react';
 import './NavBar.css';
+import { Link, useLocation } from 'react-router-dom';
+import NavButton from '../ui/NavButton';
 
-function NavLinks({closeMenu}:{closeMenu?:()=>void}){
-   function scrollInto(zone:string){
-   document.getElementById(zone)?.scrollIntoView({ behavior: 'smooth' });
-    if(closeMenu) closeMenu()
+function NavLinksLanding({ closeMenu }: { closeMenu?: () => void }) {
+	function scrollInto(zone: string) {
+		document.getElementById(zone)?.scrollIntoView({ behavior: 'smooth' });
+		if (closeMenu) closeMenu();
+	}
 
-  }
-    return (
-    <>
-    <button 
-           type='button' 
-           onClick={() => scrollInto("home")}
-            className='navbar-link'>
-              Home
-             </button>
-             <button 
-           type='button' 
-           onClick={() => scrollInto("how-it-works")}
-            className='navbar-link'>
-              How It Works
-             </button>
-             <button 
-              type='button' 
-              onClick={() => scrollInto("features")}
-              className='navbar-link'>
-              Features
-             </button>
-          <button className="button-x" type='button'>Start Quest</button>
-    </>
-
-        )
-  }
+	return (
+		<>
+			<button
+				type='button'
+				onClick={() => scrollInto('home')}
+				className='navbar-link'>
+				Home
+			</button>
+			<button
+				type='button'
+				onClick={() => scrollInto('how-it-works')}
+				className='navbar-link'>
+				How It Works
+			</button>
+			<button
+				type='button'
+				onClick={() => scrollInto('features')}
+				className='navbar-link'>
+				Features
+			</button>
+			<NavButton navTo='dashboard' />
+		</>
+	);
+}
 export default function NavBar() {
+	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const location = useLocation().pathname;
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
-  return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        
-        {/* Logo/Brand */}
-        <div className="navbar-brand">
-          <span className="brand-icon">⚔️</span>
-          <span className="brand-text">MoneyHero</span>
-        </div>
+	const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
+	return (
+		<nav className='navbar'>
+			<div className='navbar-container'>
+				{/* Logo/Brand */}
+				<div className='navbar-brand'>
+					<Link to={"/"} style={{textDecoration:"none"}}>
+						<span className='brand-icon'>⚔️</span>
+						<span className='brand-text'>MoneyHero</span>
+					</Link>
+				</div>
 
-        {/* Desktop Navigation */}
-        <div className="navbar-menu">
-              <NavLinks />
-          
-        </div>
+				{/* Desktop Navigation */}
+				<div className='navbar-menu'>
+					{location === '/' ? <NavLinksLanding /> : ''}
+				</div>
 
-        {/* Mobile Menu Button */}
-        <button 
-        type='button'
-          className="mobile-menu-btn"
-          onClick={toggleMobileMenu}
-        >
-          ☰
-        </button>
-      </div>
+				{/* Mobile Menu Button */}
+				<button
+					type='button'
+					className='mobile-menu-btn'
+					onClick={toggleMobileMenu}>
+					☰
+				</button>
+			</div>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="mobile-menu" >
-          <NavLinks closeMenu={toggleMobileMenu} />
-        </div>
-      )}
-    </nav>
-  );
+			{/* Mobile Menu */}
+			{isMobileMenuOpen && (
+				<div className='mobile-menu'>
+					<NavLinksLanding closeMenu={toggleMobileMenu} />
+				</div>
+			)}
+		</nav>
+	);
 }

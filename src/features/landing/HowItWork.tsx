@@ -1,5 +1,5 @@
 import Card from '../../components/ui/Card';
-import type {CardInfo} from '../../shared/types';
+import type {CardInfo} from '../../shared/types/index.type.ts';
 export default function HowItWork() {
 	const cardsTired: CardInfo[] = [
         {

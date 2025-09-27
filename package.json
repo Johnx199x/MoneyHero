@@ -10,7 +10,8 @@
 	},
 	"dependencies": {
 		"react": "^19.1.1",
-		"react-dom": "^19.1.1"
+		"react-dom": "^19.1.1",
+		"react-router-dom": "^7.9.2"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.2.4",
@@ -19,8 +20,8 @@
 		"@vitejs/plugin-react-swc": "^4.0.1",
 		"globals": "^16.4.0",
 		"jiti": "^2.5.1",
-
 		"typescript": "~5.8.3",
-		"vite": "^7.1.6"
+		"vite": "^7.1.6",
+		"zustand": "^5.0.8"
 	}
 }
