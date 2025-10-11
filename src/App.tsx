@@ -1,6 +1,8 @@
 import './App.css';
 import './Styles/global.css';
 import './Styles/variables.css';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import Footer from './components/layout/Footer';
@@ -26,7 +28,10 @@ function App() {
 				</Routes>
 				<Footer />
 			</Router>
+			<Analytics />
+			<SpeedInsights />
 		</ErrorBoundary>
+			
 	);
 }
 
