@@ -6,14 +6,13 @@ import type { Category, Transaction } from "../../../../../shared/types/index.ty
 
 interface transactionFormProps{
     newTransaction: Transaction;
-    setNewTransaction: React.Dispatch<React.SetStateAction<Transaction>>;
     isExpense: boolean;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleChangeSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     categories: Category[];
 }
 
-export default function TransactionForm({ newTransaction, setNewTransaction, isExpense, handleChange, handleChangeSelect, categories }: transactionFormProps) {
+export default function TransactionForm({ newTransaction,  isExpense, handleChange, handleChangeSelect, categories }: transactionFormProps) {
 	// todo: validar mejor la fecha 
 
 
@@ -59,7 +58,7 @@ export default function TransactionForm({ newTransaction, setNewTransaction, isE
 						id='TransactionAmount'
 						type='number'
                         name='amount'
-						value={newTransaction.amount}
+						value={newTransaction.amount || ''}
 						onChange= {handleChange}
 						placeholder='0.00'
 						className='form-input'

@@ -1,4 +1,5 @@
 // PlayerAnalytics.tsx
+/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 import './PlayerAnalytics.css';
 import { useState } from 'react';
 import { usePlayerStore } from '../store/playerStore';
@@ -16,7 +17,7 @@ export default function PlayerAnalytics() {
 	if (transactionHistory.length === 0) {
 		return (
 			// biome-ignore lint/correctness/useUniqueElementIds: <explanation>
-<section className='analytics-section' id='analytics'>
+			<section className='analytics-section' id='analytics'>
 				<h2 className='section-title-2'>📊 Analytics</h2>
 				<div className='empty-state'>
 					<p>Start adding transactions to see your stats!</p>
@@ -26,7 +27,7 @@ export default function PlayerAnalytics() {
 	}
 
 	return (
-		<section className='analytics-section'>
+		<section className='analytics-section' id='analytics'>
 			<h2 className='section-title-2'>📊 Analytics</h2>
 
 			{/* Tabs */}

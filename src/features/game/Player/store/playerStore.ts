@@ -32,6 +32,14 @@ const config = {
 function getExpForLevel(level: number): number {
 	return Math.floor(config.baseExp * config.levelGrowthRate ** (level - 1));
 }
+function generateId(): string {
+	// Fallback si crypto.randomUUID no está disponible
+	if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+		return crypto.randomUUID();
+	}
+	// Fallback manual
+	return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+}
 
 export const usePlayerStore = create<PlayerState>()(
 	persist(
@@ -51,20 +59,22 @@ export const usePlayerStore = create<PlayerState>()(
 			addTransaction: transaction => {
 				const state = get();
 				const transactionHistory = state.transactionHistory;
-				const newTransactionHistory = [...transactionHistory, transaction];
+				const newTransaction = { ...transaction };
 
-				if (transaction.type === 'income') {
-					const result = state.addMoney(transaction.amount);
+				newTransaction.id = generateId();
 
-					transaction.expGained = result.gainedExp;
-					transaction.battleResult = 'victory';
+				if (newTransaction.type === 'income') {
+					const result = state.addMoney(newTransaction.amount);
+
+					newTransaction.expGained = result.gainedExp;
+					newTransaction.battleResult = 'victory';
 				} else {
-					const result = state.spendMoney(transaction.amount);
-					transaction.expLoosed = result.losedExp;
-					transaction.battleResult = result.isDebt ? 'critical' : 'defeat';
+					const result = state.spendMoney(newTransaction.amount);
+					newTransaction.expLoosed = result.losedExp;
+					newTransaction.battleResult = result.isDebt ? 'critical' : 'defeat';
 				}
 
-				transaction.id = crypto.randomUUID();
+				const newTransactionHistory = [...transactionHistory, newTransaction];
 
 				set({
 					transactionHistory: newTransactionHistory,

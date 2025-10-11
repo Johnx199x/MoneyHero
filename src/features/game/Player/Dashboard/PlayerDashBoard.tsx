@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import './PlayerDashboard.css';
-import PlayerHistory from '../TransactionHistory/PlayerHistory';
 import PlayerStats from './PlayerStats';
 import {TransactionSystem } from './TransactionSystem';
 

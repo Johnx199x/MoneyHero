@@ -61,7 +61,9 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 
 	const { addTransaction } = usePlayerStore();
 
-	const handleModal = () => {
+	const handleModal = (e?: React.FormEvent) => {
+		e?.preventDefault();
+
 		newTransaction.amount = Number(newTransaction.amount);
 
 		if (!newTransaction.name.trim()) {
@@ -90,7 +92,7 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 
 	return (
 		<div className='modal-overlay' onClick={() => setShowForm(false)}>
-			<form className='modal-content' onClick={e => e.stopPropagation()}>
+			<form className='modal-content' onClick={e => e.stopPropagation()} onSubmit={handleModal}>
 				<h3
 					className={`modal-title ${isExpense ? 'spend-money' : 'add-money'}`}>
 					{isExpense ? '💸 Spend Money' : '💰 Add Money'}
@@ -98,7 +100,6 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 
 				<TransactionForm
 					newTransaction={newTransaction}
-					setNewTransaction={setNewTransaction}
 					isExpense={isExpense}
 					handleChange={handleChange}
 					handleChangeSelect={handleChangeSelect}
@@ -113,9 +114,8 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 						Cancel
 					</button>
 					<button
-						type='button'
+						type='submit'
 						className={`modal-btn submit ${isExpense ? 'spend-money' : 'add-money'}`}
-						onClick={handleModal}
 						disabled={warning !== ''}>
 						{isExpense ? 'Spend Money' : 'Add Money'}
 					</button>

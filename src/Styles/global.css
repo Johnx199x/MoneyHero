@@ -21,6 +21,9 @@
     transition: all 0.3s;
     max-height: 400px;
     max-width: 1200px;
+    min-height: 250px;
+    min-width: 300px;
+    aspect-ratio: auto;
 
     @media (max-width: 768px) {
         margin-top: 2rem;

@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import {
 	Cell,
-	Legend,
 	Pie,
 	PieChart,
 	ResponsiveContainer,
