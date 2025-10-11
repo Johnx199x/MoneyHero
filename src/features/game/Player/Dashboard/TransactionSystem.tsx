@@ -1,6 +1,5 @@
-/** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
-/** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
 /** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
 import './TransactionSystem.css';
 import type React from 'react';
 import { useState } from 'react';
@@ -13,6 +12,7 @@ import type {
 	Transaction,
 } from '../../../../shared/types/index.type';
 import { usePlayerStore } from '../store/playerStore';
+import { sanitizeString, validateTransaction } from '../utils/validationUtils';
 import TransactionForm from './Components/TransactionForm';
 
 interface ModalProps {
@@ -39,6 +39,7 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 	};
 
 	const [warning, setWarning] = useState<string>('');
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [newTransaction, setNewTransaction] =
 		useState<Transaction>(initialTransaction);
 
@@ -46,11 +47,15 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 		const { name, value } = e.target;
 		setWarning('');
 
+		const sanitizedValue =
+			name === 'name' || name === 'description' ? sanitizeString(value) : value;
+
 		setNewTransaction({
 			...newTransaction,
-			[name]: value,
+			[name]: sanitizedValue,
 		});
 	};
+
 	const handleChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		const { value } = e.target;
 		setNewTransaction({
@@ -61,38 +66,63 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 
 	const { addTransaction } = usePlayerStore();
 
-	const handleModal = (e?: React.FormEvent) => {
+	const handleModal = async (e?: React.FormEvent) => {
 		e?.preventDefault();
 
-		newTransaction.amount = Number(newTransaction.amount);
+		if (isSubmitting) return;
 
-		if (!newTransaction.name.trim()) {
-			setWarning('Transaction name is required');
-			return;
-		}
-		if (!newTransaction.date) {
-			setWarning('Date is required');
-			return;
-		}
-		const num = Number(newTransaction.amount);
+		setIsSubmitting(true);
+		setWarning('');
 
-		if (num <= 0) {
-			setWarning('Amount must be positive');
-			return;
-		}
+		try {
+			const validation = validateTransaction({
+				name: newTransaction.name,
+				description: newTransaction.description || '',
+				amount: newTransaction.amount,
+				date: newTransaction.date,
+			});
 
-		addTransaction({
-			...newTransaction,
-			amount: num,
-		});
-		setShowForm(false);
+			if (!validation.isValid) {
+				setWarning(validation.error || 'Invalid transaction');
+				setIsSubmitting(false);
+				return;
+			}
+
+			const amount = Number(newTransaction.amount);
+
+			const transactionToAdd: Transaction = {
+				...newTransaction,
+				name: sanitizeString(newTransaction.name),
+				description: sanitizeString(newTransaction.description || ''),
+				amount,
+			};
+
+			addTransaction(transactionToAdd);
+
+			setNewTransaction(initialTransaction);
+			setWarning('');
+			setShowForm(false);
+		} catch (error) {
+			console.error('Error adding transaction:', error);
+			setWarning('Failed to save transaction. Please try again.');
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	const handleCancel = () => {
 		setNewTransaction(initialTransaction);
 		setWarning('');
+		setShowForm(false);
 	};
 
 	return (
-		<div className='modal-overlay' onClick={() => setShowForm(false)}>
-			<form className='modal-content' onClick={e => e.stopPropagation()} onSubmit={handleModal}>
+		<div className='modal-overlay' onClick={handleCancel}>
+			<form
+				className='modal-content'
+				onClick={e => e.stopPropagation()}
+				onKeyDown={e => e.stopPropagation()}
+				onSubmit={handleModal}>
 				<h3
 					className={`modal-title ${isExpense ? 'spend-money' : 'add-money'}`}>
 					{isExpense ? '💸 Spend Money' : '💰 Add Money'}
@@ -106,27 +136,39 @@ export const TransactionSystem = ({ setShowForm, type }: ModalProps) => {
 					categories={categories}
 				/>
 
+				{warning && (
+					<div
+						className='form-warning'
+						style={{
+							color: 'var(--danger)',
+							marginBottom: '1rem',
+							padding: '0.75rem',
+							background: 'rgba(239, 68, 68, 0.1)',
+							borderRadius: '0.5rem',
+							textAlign: 'center',
+						}}>
+						⚠️ {warning}
+					</div>
+				)}
+
 				<div className='modal-actions'>
 					<button
 						type='button'
 						className='modal-btn cancel'
-						onClick={() => setShowForm(false)}>
+						onClick={handleCancel}
+						disabled={isSubmitting}>
 						Cancel
 					</button>
 					<button
 						type='submit'
 						className={`modal-btn submit ${isExpense ? 'spend-money' : 'add-money'}`}
-						disabled={warning !== ''}>
-						{isExpense ? 'Spend Money' : 'Add Money'}
+						disabled={isSubmitting}>
+						{isSubmitting
+							? 'Saving...'
+							: isExpense
+								? 'Spend Money'
+								: 'Add Money'}
 					</button>
-
-					{warning && (
-						<div
-							className='form-warning'
-							style={{ color: 'var(--danger)', marginBottom: '1rem' }}>
-							⚠️ {warning}
-						</div>
-					)}
 				</div>
 			</form>
 		</div>

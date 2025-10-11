@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ACHIEVEMENTS } from '../../../../../shared/constants/achievement';
 import './AchievementToast.css';
 

@@ -18,7 +18,7 @@ export default function CallToAction() {
 				style={{ color: emerald, display: 'block', marginBottom: '2rem' }}>
 				Ready to Level Up?
 			</span>
-			<NavButton navTo='dashboard' />
+			<NavButton navTo='game' />
 		</section>
 	);
 }

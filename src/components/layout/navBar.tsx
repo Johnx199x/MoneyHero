@@ -27,7 +27,7 @@ function NavLinks({
 					{link.name}
 				</button>
 			))}
-			{location.pathname === '/' && <NavButton navTo='dashboard' />}
+			{location.pathname === '/' && <NavButton navTo='game' />}
 		</>
 	);
 }
