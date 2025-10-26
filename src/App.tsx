@@ -8,8 +8,12 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Footer from './components/layout/Footer';
 import { LoadingScreen } from './components/layout/LoadingScreen';
 import NavBar from './components/layout/NavBar';
+import PrivateRoute from './components/PrivateRoute';
+import { AuthProvider } from './context/authContext';
 import PlayerDashboard from './features/game/Player/gamePage';
 import { HomePage } from './features/landing/HomePage';
+import Login from './features/login/loginPage';
+import SignUp from './features/login/signUpPage';
 import { useHydration } from './hooks/useHydration';
 
 function App() {
@@ -21,21 +25,30 @@ function App() {
 
 	return (
 		<ErrorBoundary>
-			<Router>
-				<NavBar />
-				<Routes>
-					<Route path='/' element={<HomePage />} />
-					<Route
-						path='/game'
-						element={
-							<ErrorBoundary>
-								<PlayerDashboard />
-							</ErrorBoundary>
-						}
-					/>
-				</Routes>
-				<Footer />
-			</Router>
+			<AuthProvider>
+				<Router>
+					<NavBar />
+					<Routes>
+						{/* Rutas públicas */}
+						<Route path='/' element={<HomePage />} />
+						<Route path='/login' element={<Login />} />
+						<Route path='/signUp' element={<SignUp />} />
+
+						{/* Rutas protegidas */}
+						<Route
+							path='/game'
+							element={
+								<PrivateRoute>
+									<ErrorBoundary>
+										<PlayerDashboard />
+									</ErrorBoundary>
+								</PrivateRoute>
+							}
+						/>
+					</Routes>
+					<Footer />
+				</Router>
+			</AuthProvider>
 			<Analytics />
 			<SpeedInsights />
 		</ErrorBoundary>

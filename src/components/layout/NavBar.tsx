@@ -35,10 +35,14 @@ function NavLinks({ closeMenu, links, currentPath }: NavLinksProps) {
 export default function NavBar() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const location = useLocation();
-	const [links, setLink] = useState(NavLandingLinks);
+	const [links, setLink] = useState<{name:string , to:string}[] | undefined>(NavLandingLinks);
 
 	useEffect(() => {
-		const link = location.pathname === '/' ? NavLandingLinks : NavGameLinks;
+		let link:{name:string , to:string}[] | undefined
+		if(location.pathname === '/') link = NavLandingLinks
+		else if(location.pathname === '/game') link = NavGameLinks
+		else link = undefined
+		 
 		setLink(link);
 	}, [location.pathname]);
 
@@ -56,21 +60,24 @@ export default function NavBar() {
 				</div>
 
 				{/* Desktop Navigation */}
-				<div className='navbar-menu'>
+				{links &&
+				(<div className='navbar-menu'>
 					<NavLinks links={links} currentPath={location.pathname} />
 				</div>
-
+				)}
 				{/* Mobile Menu Button */}
+				{links &&( 
 				<button
 					type='button'
 					className='mobile-menu-btn'
 					onClick={toggleMobileMenu}>
 					☰
-				</button>
+				</button>)}
 			</div>
-
+				
 			{/* Mobile Menu */}
-			{isMobileMenuOpen && (
+			{isMobileMenuOpen && links && (
+
 				<div className='mobile-menu'>
 					<NavLinks 
 						closeMenu={toggleMobileMenu} 
@@ -79,6 +86,7 @@ export default function NavBar() {
 					/>
 				</div>
 			)}
+		
 		</nav>
 	);
 }
