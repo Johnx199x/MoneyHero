@@ -10,6 +10,7 @@ import { LoadingScreen } from './components/layout/LoadingScreen';
 import NavBar from './components/layout/NavBar';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthProvider } from './context/authContext';
+import AboutPage from './features/about/aboutPage';
 import PlayerDashboard from './features/game/Player/gamePage';
 import { HomePage } from './features/landing/HomePage';
 import Login from './features/login/loginPage';
@@ -33,7 +34,7 @@ function App() {
 						<Route path='/' element={<HomePage />} />
 						<Route path='/login' element={<Login />} />
 						<Route path='/signUp' element={<SignUp />} />
-
+						<Route path='/about' element={<AboutPage />} />
 						{/* Rutas protegidas */}
 						<Route
 							path='/game'

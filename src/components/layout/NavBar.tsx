@@ -1,8 +1,9 @@
+/** biome-ignore-all lint/suspicious/noAssignInExpressions: <explanation> */
 import { useEffect, useState } from 'react';
 import './NavBar.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/authContext';
-import {
+import {NavAboutLinks,
 	NavGameLinks,
 	NavLandingLinks,
 } from '../../shared/constants/constants';
@@ -19,7 +20,9 @@ function NavLinks({ closeMenu, links, currentPath }: NavLinksProps) {
 	const navigate = useNavigate()
 
 	function scrollInto(zone: string) {
-		document.getElementById(zone)?.scrollIntoView({ behavior: 'smooth' });
+
+		if(zone.startsWith("/")) navigate(zone)
+		else document.getElementById(zone)?.scrollIntoView({ behavior: 'smooth' });
 		;
 	}
 
@@ -32,9 +35,10 @@ function NavLinks({ closeMenu, links, currentPath }: NavLinksProps) {
 					onClick={() =>{
 						if (link.name === 'Sign Out') {
 							signOut()
-							navigate('/')
+							navigate("/")
 						}
 						else scrollInto(link.to)
+
 						if (closeMenu) closeMenu()
 					}
 					}
@@ -58,6 +62,7 @@ export default function NavBar() {
 		let link: { name: string; to: string }[] | undefined;
 		if (location.pathname === '/') link = NavLandingLinks;
 		else if (location.pathname === '/game') link = NavGameLinks;
+		else if (location.pathname === "/about")  link= NavAboutLinks
 		else link = undefined;
 
 		setLink(link);

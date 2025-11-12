@@ -21,15 +21,22 @@ export const expenseCategories = [
 	'other',
 ] as const;
 
+export const NavAboutLinks = [
+	{ name: 'Home', to: '/' },
+	{ name: 'Game', to: '/game' },
+];
+
 export const NavLandingLinks = [
 	{ name: 'Home', to: 'home' },
 	{ name: 'How It Works', to: 'how-it-works' },
 	{ name: 'Features', to: 'features' },
+	{ name: 'About Proyect', to: '/about' },
 ];
 export const NavGameLinks = [
 	{ name: 'Dashboard', to: 'dashboard' },
 	{ name: 'Analytics', to: 'analytics' },
 	{ name: 'BattleLog', to: 'battleLogs' },
 	{ name: 'Achievements', to: 'achievements' },
+	{ name: 'About Proyect', to: '/about' },
 	{ name: 'Sign Out', to: '/' },
 ];
